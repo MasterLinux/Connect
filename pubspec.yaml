@@ -1,0 +1,10 @@
+name: connect
+version: 1.0.0-alpha.1
+author: Christoph Grundmann <christoph.grundmann@gmail.com>
+homepage: https://github.com/MasterLinux/Connect
+description:
+  A library for dart which allows many to many relationship between objects.
+  So it is possible to send messages from one object to another with the help
+  of custom signals. This library is inspired by the QT signal and slots pattern.
+dev_dependencies:
+  unittest: ">=0.10.0 <0.11.0"

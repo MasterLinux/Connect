@@ -1,4 +1,16 @@
+# Dart
 .DS_Store
 packages
 .project
 pubspec.lock
+.buildlog
+*.js_
+*.js.deps
+*.js.map
+*.dart.js
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
