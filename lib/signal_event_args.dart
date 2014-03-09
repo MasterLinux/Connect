@@ -6,7 +6,7 @@ part of apetheory.event.connect;
  * example usage:
  *
  *      //create a new instance
- *      var args = new EventArgs.from({
+ *      var args = new SignalEventArgs.from({
  *          "title": "example_title",
  *          "handler": (title) {
  *              print(title);
