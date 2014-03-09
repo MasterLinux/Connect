@@ -5,13 +5,16 @@ This library is used for communication between objects.
 ##Initial stuff
 First add the `connect` library to your project by adding it to your **pubspec.yaml** like
 
-    dependencies:
-        connect: ">= 1.0.0"
+```dart
+dependencies:
+    connect: ">= 1.0.0"
+```
 
 Than import it into your project with the following line.
 
-    import 'package:connect/connect.dart';
-
+```dart
+import 'package:connect/connect.dart';
+```
 
 ##A small introduction
 This library consists of two main classes for connecting and disconnecting `signal`s and `slot`s.
