@@ -61,7 +61,7 @@ class Page {
         //is printed.
         Connect
             .signal(ON_LOADED)
-            .emit(new SignalEventArgs.from({
+            .emit(new SignalEventArgs.fromMap({
                 "isErrorOccurred": isErrorOccurred,
                 "errorMsg": "Unable to load page.",
                 "printError": (msg) {

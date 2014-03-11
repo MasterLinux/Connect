@@ -30,35 +30,73 @@ part of apetheory.event.connect;
  *
  */
 class SignalEventArgs { //TODO extends EventArgs
-  Map<String, dynamic> _args;
+  Map<String, Object> _args;
 
   /**
    * Initializes the event args with the
-   * help of a map of [arguments].
+   * help of a map.
    */
-  SignalEventArgs.from(Map<String, dynamic> arguments) {
+  SignalEventArgs.fromMap(Map<String, Object> arguments) {
     _args = arguments;
 
     if(_args == null) {
-      _args = <String, dynamic>{};
+      _args = <String, Object>{};
     }
   }
 
   /**
    * Gets an argument by its [name] or
-   * returns null if this event arguments
-   * doesn't contain an argument with
-   * the given name.
+   * returns null if an argument with
+   * the given name does not exist.
    */
   Object operator [](String name) {
     return _args.containsKey(name) ? _args[name] : null;
   }
 
+  operator []=(String name, Object value) {
+    _args[name] = value;
+  }
+
   /**
-   * Returns true if this event arguments contains
-   * an argument with the given [name].
+   * Returns true if an argument with
+   * the given [name] exists.
    */
   bool hasArgument(String name) {
     return _args.containsKey(name);
+  }
+
+  noSuchMethod(Invocation invocation) {
+    var argName = _getSymbolName(invocation.memberName);
+    var posArgsCount = 0;
+
+    //get number of positional arguments
+    if(invocation.positionalArguments != null) {
+      posArgsCount = invocation.positionalArguments.length;
+    }
+
+    //try to get value
+    if(invocation.isGetter && hasArgument(argName)) {
+      return this[argName];
+    }
+
+    //otherwise try to set value
+    else if(invocation.isSetter && posArgsCount == 1) {
+      return this[argName] = invocation.positionalArguments[0];
+    }
+
+    super.noSuchMethod(invocation);
+  }
+
+  /**
+   * Tries to get the name of the given [Symbol].
+   * Whenever [value] is null it returns null.
+   */
+  String _getSymbolName(value) {
+    if(value is Symbol) {
+      var name = MirrorSystem.getName(value);
+      return name.replaceAll('=', '');
+    }
+
+    return value != null ? value.toString() : null;
   }
 }
