@@ -92,7 +92,7 @@ class PageManager {
       }
 
       //you can also access arguments by using the dot notation
-      else {
+      else if(args.successMsg != null) {
         print(args.successMsg);
       }
     }
