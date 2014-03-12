@@ -3,6 +3,7 @@ Changelog
 
 ##1.0.0-alpha.3
 * Replaced the `SignalEventArgs.from` constructor with the `fromMap` constructor.
+* Removed support for setting functions as argument.
 * Added default constructor to `SignalEventArgs`.
 * Added the `[]=` operator to `SignalEventArgs` to set or update arguments.
 * Added the `noSuchMethod` to `SignalEventArgs` to allow accessing or setting properties by dot notation.

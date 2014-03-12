@@ -6,26 +6,21 @@ part of apetheory.event.connect;
  * example usage:
  *
  *      //create a new instance
- *      var args = new SignalEventArgs.from({
- *          "title": "example_title",
- *          "handler": (title) {
- *              print(title);
- *          }
+ *      var args = new SignalEventArgs.fromMap({
+ *          "title": "example_title"
  *      });
  *
  *      //check whether all required arguments are available
- *      var hasHandler = args.hasArgument("handler");
  *      var hasName = args.hasArgument("title");
  *
- *      //if so execute handler
- *      if(hasName && hasHandler) {
+ *      //if so print title
+ *      if(hasName) {
  *
  *          //get and cast arguments
- *          var handler = args["handler"] as Function;
  *          var title = args["title"] as String;
  *
  *          //do crazy stuff
- *          handler(title);
+ *          print(title);
  *      }
  *
  */
@@ -46,8 +41,18 @@ class SignalEventArgs { //TODO extends EventArgs
   SignalEventArgs.fromMap(Map<String, Object> arguments) {
     _args = arguments;
 
+    //init argument map
     if(_args == null) {
       _args = <String, Object>{};
+    }
+
+    //check whether als arguments are valid
+    else {
+      _args.forEach((name, value) {
+        if(value is Function) {
+          throw new FunctionNotAllowedException(name);
+        }
+      });
     }
   }
 
@@ -64,7 +69,11 @@ class SignalEventArgs { //TODO extends EventArgs
    * Sets an argument by its [name].
    */
   operator []=(String name, Object value) {
-    _args[name] = value;
+    if(value is Function) {
+      throw new FunctionNotAllowedException(name);
+    }
+
+    return _args[name] = value;
   }
 
   /**
@@ -75,6 +84,11 @@ class SignalEventArgs { //TODO extends EventArgs
     return _args.containsKey(name);
   }
 
+  /**
+   * Overriding of the noSuchMethod to allow
+   * the accessing and setting of arguments
+   * by the dot notation.
+   */
   noSuchMethod(Invocation invocation) {
     var argName = _getSymbolName(invocation.memberName);
     var posArgsCount = 0;
@@ -85,7 +99,7 @@ class SignalEventArgs { //TODO extends EventArgs
     }
 
     //try to get value
-    if(invocation.isGetter && hasArgument(argName)) {
+    if(invocation.isGetter) {
       return this[argName];
     }
 
@@ -93,8 +107,6 @@ class SignalEventArgs { //TODO extends EventArgs
     else if(invocation.isSetter && posArgsCount == 1) {
       return this[argName] = invocation.positionalArguments[0];
     }
-
-    //TODO implement setter for functions
 
     super.noSuchMethod(invocation);
   }

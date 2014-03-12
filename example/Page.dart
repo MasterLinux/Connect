@@ -15,21 +15,13 @@ class Page {
     //initialize event args from map
     var args = new SignalEventArgs.fromMap({
         "isErrorOccurred": isErrorOccurred,
-        "errorMsg": "Unable to load page.",
-        "printError": (msg) {
-          print("error: $msg");
-        }
+        "errorMsg": "Unable to load page."
     });
 
     //or just add a new argument by setter
     args.successMsg = "Page is loaded completely!";
-    args.printSuccess = (msg) {
-      print("success: $msg");
-    };
 
-    //emit signal. When all connected slots
-    //are executed the "completed" String
-    //is printed.
+    //emit signal
     Connect
     .signal(ON_LOADED)
     .emit(args).then((_) => print("completed"));;

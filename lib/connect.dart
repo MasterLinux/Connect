@@ -103,6 +103,7 @@ part 'slot.dart';
 part 'disconnect.dart';
 part 'signal_event_args.dart';
 part 'event_manager.dart';
+part 'function_not_allowed_exception.dart';
 
 /**
  * Connects a specific signal to many

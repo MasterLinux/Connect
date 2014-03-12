@@ -45,80 +45,92 @@ In the following example you can see how-to use this library.
 
 ```dart
 class Page {
-    static const String ON_LOADED = "Page_OnLoaded";
+  static const String ON_LOADED = "Page_OnLoaded";
 
-    //loads the page
-    void load() {
-        _onLoaded(true);
-    }
+  //loads the page
+  void load(bool isErrorOccurred) {
+    _onLoaded(isErrorOccurred);
+  }
 
-    //on loaded handler which is invoked when
-    //the page is completely loaded
-    void _onLoaded(bool isErrorOccurred) {
+  //on loaded handler which is invoked when
+  //the page is completely loaded
+  void _onLoaded(bool isErrorOccurred) {
 
-        //emit signal. When all connected slots
-        //are executed the "completed" String
-        //is printed.
-        Connect
-            .signal(ON_LOADED)
-            .emit(new SignalEventArgs.fromMap({
-                "isErrorOccurred": isErrorOccurred,
-                "errorMsg": "Unable to load page.",
-                "printError": (msg) {
-                    print(msg);
-                }
-            })).then((_) => print("completed"));;
-    }
+    //initialize event args from map
+    var args = new SignalEventArgs.fromMap({
+        "isErrorOccurred": isErrorOccurred,
+        "errorMsg": "Unable to load page."
+    });
+
+    //or just add a new argument by setter
+    args.successMsg = "Page is loaded completely!";
+
+    //emit signal
+    Connect
+    .signal(ON_LOADED)
+    .emit(args).then((_) => print("completed"));;
+  }
 }
 
 class PageManager {
-    //create a new slot which is invoked when a page is loaded
-    Slot _onPageLoaded = new Slot((args) {
+  //create a new slot which is invoked when a page is loaded
+  Slot _onPageLoaded = new Slot((args) {
 
-        //you are able to check whether all required arguments are available
-        var hasIsErrorOccurred = args.hasArgument("isErrorOccurred");
-        var hasErrorMsg = args.hasArgument("errorMsg");
-        var hasPrintError = args.hasArgument("printError");
+    //you are able to check whether all required arguments are available
+    var hasIsErrorOccurred = args.hasArgument("isErrorOccurred");
+    var hasErrorMsg = args.hasArgument("errorMsg");
 
-        if(hasIsErrorOccurred && hasErrorMsg && hasPrintError) {
+    if(hasIsErrorOccurred && hasErrorMsg) {
 
-            //get and cast arguments
-            var isErrorOccurred = args["isErrorOccurred"] as bool;
-            var errorMsg = args["errorMsg"] as String;
-            var printError = args["printError"] as Function;
+      //get and cast arguments
+      var isErrorOccurred = args["isErrorOccurred"] as bool;
+      var errorMsg = args["errorMsg"] as String;
 
-            //do whatever you want with it ;)
-            if(isErrorOccurred) {
-                printError(errorMsg);
-            }
-        }
-    });
+      //do whatever you want with it ;)
+      if(isErrorOccurred) {
+        print(errorMsg);
+      }
 
-    PageManager() {
-        //connect signal to slot so each time
-        //the "Page_OnLoaded" signal is emitted
-        //the _onPageLoaded Slot is invoked.
-        Connect
-            .signal(Page.ON_LOADED)
-            .to(_onPageLoaded);
+      //you can also access arguments by using the dot notation
+      else {
+        print(args.successMsg);
+      }
     }
+  });
 
-    //loads all existing pages
-    void load() {
-        new Page().load();
-    }
+  //create another slot which is invoked when a page is loaded
+  Slot _onPageLoadedTwo = new Slot((args) {
+    print("hey!");
+  });
 
-    //disconnects signal from slot
-    void destroy() {
-        Disconnect
-            .signal(Page.ON_LOADED)
-            .from(_onPageLoaded);
-    }
+  PageManager() {
+    //connect signal to slot so each time
+    //the "Page_OnLoaded" signal is emitted
+    //the _onPageLoaded Slot is invoked.
+    Connect
+      .signal(Page.ON_LOADED)
+      .to(_onPageLoadedTwo)
+      .to(_onPageLoaded);
+  }
+
+  //loads all existing pages
+  void load() {
+    new Page().load(false);
+    new Page().load(true);
+  }
+
+  //disconnects signal from slot
+  void destroy() {
+    Disconnect
+      .signal(Page.ON_LOADED)
+      .from(_onPageLoadedTwo)
+      .from(_onPageLoaded);
+  }
 }
 
 void main() {
-    var pageManager = new PageManager();
-    pageManager.load();
-    pageManager.destroy();
+  var pageManager = new PageManager();
+  pageManager.load();
+  pageManager.destroy();
 }
 ```
