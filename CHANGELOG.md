@@ -17,6 +17,9 @@ args.testMsg = "That's a test!";
 //get this property by dot notation
 print(args.testMsg);
 
-//throws NoSuchMethodError
-print(args.example);
+//check whether the argument exists
+var isMissing = args.example == null;
+
+//prints true
+print(isMissing);
 ```
