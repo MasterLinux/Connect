@@ -33,6 +33,13 @@ class SignalEventArgs { //TODO extends EventArgs
   Map<String, Object> _args;
 
   /**
+   * Initializes the event args.
+   */
+  SignalEventArgs() {
+    _args = <String, Object>{};
+  }
+
+  /**
    * Initializes the event args with the
    * help of a map.
    */
@@ -53,6 +60,9 @@ class SignalEventArgs { //TODO extends EventArgs
     return _args.containsKey(name) ? _args[name] : null;
   }
 
+  /**
+   * Sets an argument by its [name].
+   */
   operator []=(String name, Object value) {
     _args[name] = value;
   }
@@ -83,6 +93,8 @@ class SignalEventArgs { //TODO extends EventArgs
     else if(invocation.isSetter && posArgsCount == 1) {
       return this[argName] = invocation.positionalArguments[0];
     }
+
+    //TODO implement setter for functions
 
     super.noSuchMethod(invocation);
   }
