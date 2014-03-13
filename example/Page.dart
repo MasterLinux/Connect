@@ -18,12 +18,12 @@ class Page {
         "errorMsg": "Unable to load page."
     });
 
-    //or just add a new argument by setter
+    //or just add a new argument by using the dot notation
     args.successMsg = "Page is loaded completely!";
 
     //emit signal
     Connect
-    .signal(ON_LOADED)
-    .emit(args).then((_) => print("completed"));;
+      .signal(ON_LOADED)
+      .emit(args).then((_) => print("completed"));;
   }
 }
