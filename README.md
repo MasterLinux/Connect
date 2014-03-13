@@ -22,26 +22,50 @@ This library consists of two main classes for connecting and disconnecting `sign
 * Connect -> *connects a signal to a slot*
 * Disconnect -> *disconnects a signal from a slot*
 
-A **signal** is just a *String* and could be a static and constant class member, for example:
+A **signal** is just a *String* and could be a static constant.
 
 ```dart
-class Page {
-    static const String ON_LOADED = "Page_OnLoaded";
-}
+static const String ON_LOADED = "Page_OnLoaded";
 ```
 
 A **slot** is like a Runnable in Java and holds a function which will be executed asynchronously.
 
 ```dart
-class PageManager {
-    Slot _onPageLoaded = new Slot((args) {
-        //do some crazy stuff
-    });
-}
+Slot _onPageLoaded = new Slot((args) {
+  //do some crazy stuff
+});
 ```
 
-##How-to use
-In the following example you can see how-to use this library.
+This function has one positional argument `args` which is of type **SignalEventArgs**. Usually you get access to members of it by using the dot notation, like
+
+```dart
+var title = args.title;
+```
+
+Whenever the title property is never set it returns `null` otherwise the title. To set the title you can use the dot notation, too.
+
+```dart
+var args = new SignalEventArgs();
+args.title = "This is an example";
+```
+
+In case you try to set a function an exception is thrown.
+
+```dart
+var args = new SignalEventArgs();
+
+//to set a function isn't allowed
+args.handler = (arg) { ... };
+```
+
+To ***Connect*** a signal to a slot the `Connect.signal(signal).to(slot)` function is used.
+
+To ***Disconnect*** a signal from a slot the `Disconnect.signal(signal).from(slot)` function is used.
+
+Now you can ***emit*** the signal by using `Connect.signal(signal).emit()`. The `emit` function returns a `Future`.
+
+##How to use
+In the following example you can see how to use this library.
 
 ```dart
 class Page {
@@ -68,7 +92,8 @@ class Page {
     //emit signal
     Connect
       .signal(ON_LOADED)
-      .emit(args).then((_) => print("completed"));;
+      .emit(args)
+      .then((_) => print("completed"));
   }
 }
 

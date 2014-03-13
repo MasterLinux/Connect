@@ -24,6 +24,7 @@ class Page {
     //emit signal
     Connect
       .signal(ON_LOADED)
-      .emit(args).then((_) => print("completed"));;
+      .emit(args)
+      .then((_) => print("completed"));
   }
 }
